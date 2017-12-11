@@ -1,0 +1,235 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="hw8.css" rel="stylesheet"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+        <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.4/angular-material.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.11/angular.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.11/angular-animate.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.11/angular-aria.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.11/angular-messages.min.js"></script>
+         <script src="https://gitcdn.link/repo/angular/bower-material/master/angular-material.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-sanitize/1.5.5/angular-sanitize.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap.js"></script>
+        <script src="http://code.highcharts.com/stock/highstock.js"></script>
+        <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://connect.facebook.net/en_US/sdk.js"></script>
+        <script src="hw8_1.js"></script>
+        </head>
+    <body>
+        <div ng-app = "firstApplication" ng-cloak ng-controller = "autoCompleteController as ctrl">
+           
+        <div class="well container" id="block1">
+        <h4 style="text-align:center">Stock Market Search</h4>
+          <!--<form>-->
+            
+              <div class="form-group row">
+                  <label  for="stock" class="col-sm-3">Enter Stock Ticker Symbol:*</label>
+                  <div class="col-sm-6">
+        <form>
+          <!--   -------------------------------------------------- -->
+            
+              
+          <div layout = "column" ng-cloak>
+             <md-content>
+                <form ng-submit = "$event.preventDefault()" name="searchForm">
+                <md-autocomplete
+                       required ="true"
+                      md-input-name="autocompleteField"
+                       ng-model="ctrl.isDisabled"
+                      name = "autocompleteField"
+                      md-search-text-change = "ctrl.searchTextChange(ctrl.searchText)"
+                      md-search-text = "ctrl.searchText"
+                      md-selected-item-change = "ctrl.selectedItemChange(item)"
+                      md-items = "item in ctrl.querySearch(ctrl.searchText)"
+                      md-item-text = "item.displayCap"
+                      md-min-length = "2"
+                      placeholder = "e.g. AAPL">
+                      <md-item-template>
+                         <span md-highlight-text = "ctrl.searchText"
+                            md-highlight-flags = "^i">{{item.display}}</span>
+                         
+                      
+                    <div ng-messages="searchForm.autocompleteField.$error" 
+                         ng-if="searchForm.autocompleteField.$touched"
+                         >
+        <div ng-message="required">You <b>must</b> have a favorite state.</div>
+        <div ng-message="md-require-match">Your entry is not long enough.</div>
+        <div ng-message="maxlength">Your entry is too long.</div>
+                        
+      </div>
+                  </md-item-template>
+                   </md-autocomplete>
+                </form>
+             </md-content>
+          </div>
+               
+            <!--   -------------------------------------------------- --> 
+        </form>
+                  </div>
+                  <div class="col-sm-3">
+                      <button ng-click="getQuote(ctrl.searchText)" ng-model="hides" id="query" type="submit" class="btn btn-primary"> <span class="glyphicon glyphicon-search"></span> Get Quote</button>
+                      <button type="submit" class="btn btn-default" ng-click="Clear()"><span class="glyphicon glyphicon-refresh"></span> Clear</button>
+                  </div>
+            </div>
+       
+         <!--</form> within form the click event is not working -->
+         </div>
+            <hr style="width:80%">
+            <div class="well container" id="block2">
+                <div class="containers">     <!-- Wrapper for slides -->
+             <div class="animate-slide1" ng-hide="slide" id="firstElement">  
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                              <b>Favorite List</b>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                Automatic Refresh <input type="checkbox"  data-toggle="toggle"  />
+                                                <button type="button" class="btn btn-default" ng-click="refresh()"><span class="glyphicon glyphicon-refresh"></span></button>
+                                                <button type="button" ng-click="slide=true" class="btn btn-default"><span class="glyphicon glyphicon-chevron-right" ></span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <form>
+                                            <div class="form-inline">
+                                                <label for="sel1">Sort By</label>
+                                                  <select class="form-control" id="sell" ng-init="selectedName = sortBy[0]" ng-model="selectedName" ng-options="x for x in sortBy" ng-change="myfunc()"></select>  
+                                                <label for="sel1">Order</label>
+                                                
+                                                <select class="form-control" id="sell" 
+                                                        ng-init="selectedOrder = order[0]" ng-model="selectedOrder" ng-options="y for y in order" ng-disabled="selectedName==sortBy[0]"
+                                                        ng-change="myfunc()"></select>
+                                            </div>
+                                        </form>
+                                    
+                                            
+                                            <!-- the experiment area for the favourite list  -->
+   
+                                        
+                                    <!--<ul>
+                                        <li>{{products[0]}}<span ng-click="removeItem($index)"><button></button></span></li>
+                                      </ul>
+                                        {{products}}-->
+                                      <!--<input ng-model="addMe">
+                                      <button ng-click="addItem()">Add</button>-->
+                                      <p>{{errortext}}</p>
+                                        <table class='table table-striped'><thead><tr><th>Symbol</th><th>Stock Price</th><th>Change(Change Percent)</th><th>Volume</th><th></th></tr></thead><tbody><tr ng-repeat="pro in products | orderBy:myOrderBy"><td><a href="#" ng-click=" getQuote(pro.symbol)">{{pro.symbol}}</a></td><td>{{pro.price}}</td><td>{{pro.change}}({{pro.percent}}%)</td><td>{{pro.volume.toLocaleString()}}</td><td><button class="btn btn-default" ng-click="removeItem(pro.symbol);"><span class="glyphicon glyphicon-trash"></span></button></td></tr></tbody></table>
+                                        
+                                        <!-- end of the favourite area part -->
+                                            
+                                            
+                                         
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="animate-slide" ng-show="slide" id="secondElement">  
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <div class="row">
+                                        <div class="col-sm-5"><button type="button" ng-click="slide=false" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span></button></div>
+                                        
+                                        <div class="col-sm-7"><b>Stock Details</b></div>
+                                        
+                                        </div>
+                                    </div>
+                                    <div class="panel-body">
+                                        <ul class="nav nav-pills">
+                                            <li class="active"><a data-toggle="pill" href="#number1"> <span class="glyphicon glyphicon-dashboard"></span> Current Stock</a></li>
+                                            <li><a data-toggle="pill" href="#number2"><span class="glyphicon glyphicon-stats"></span> Historical Charts</a></li>
+                                            <li><a data-toggle="pill" href="#number3"><span class="glyphicon glyphicon-link"></span> News Feeds</a></li>
+                                        </ul>
+                                    <hr id="1">  
+                                    <div class = "tab-content">
+                                        <div id="number1" class="tab-pane fade in active">
+                                            <div class="col-sm-6">
+                                                <div class="col-sm-8"><b>Stock Details</b></div>
+                                                <div class="col-sm-4">
+                                                    <button type="button"  ng-model="collapsed" class="btn btn-default" ng-click="collapsed=!collapsed;addorremoveItem($index)"><span  ng-class="{'glyphicon glyphicon-star-empty': !collapsed, 'glyphicon glyphicon-star yellow': collapsed}"></span></button>
+                                                    <button type="button" class="btn btn-default" ng-click="facebook()">
+                                                        <img src="http://cs-server.usc.edu:45678/hw/hw8/images/facebook.png" width="22px" height="22px">
+                                                    </button>
+                                                </div>
+                                                        <div ng-show="hides"><br><br><br><br><br><div class='progress'><div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width:50%'></div></div>
+                                                    </div>
+                                                <div ng-hide="hides" ng-bind-html="tableContent"></div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <ul class='nav nav-tabs'>
+                                                    <li class="active"><a data-toggle='tab' href='#menu1' ng-click="imageproducer('Price')">Price</a></li>
+                                                    <li><a data-toggle='tab' href='#menu2' ng-click="imageproducer('SMA')">SMA</a></li>
+                                                    <li><a data-toggle='tab' href='#menu3' ng-click="imageproducer('EMA')">EMA</a></li>
+                                                    <li><a data-toggle='tab' href='#menu4' ng-click="imageproducer('STOCH')">STOCH</a></li>
+                                                    <li><a data-toggle='tab' href='#menu5' ng-click="imageproducer('RSI')">RSI</a></li>
+                                                    <li><a data-toggle='tab' href='#menu6' ng-click="imageproducer('ADX')">ADX</a></li>
+                                                    <li><a data-toggle='tab' href='#menu7' ng-click="imageproducer('CCI')">CCI</a></li>
+                                                    <li><a data-toggle='tab' href='#menu8' ng-click="imageproducer('BBANDS')">BBANDS</a></li>
+                                                    <li><a data-toggle='tab' href='#menu9' ng-click="imageproducer('MACD')">MACD</a></li>
+                                                </ul>
+                                    <div class='tab-content'>
+                                        <div id="menu1" class="tab-pane fade in active">
+                                            <div ng-show="hides2"><br><div class='progress'><div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width:50%'></div></div></div>
+                                            <div id="1st" ng-hide="hides2" ></div>
+                                        </div>
+                                        <div id="menu2" class="tab-pane fade">
+                                            <div ng-show="hides3"><br><div class='progress'><div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width:50%'></div></div></div>
+                                            <div id="2nd" ng-hide="hides3" ></div>
+                                        </div>
+                                        <div id="menu3" class="tab-pane fade">
+                                            <div ng-show="hides4"><br><div class='progress'><div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width:50%'></div></div></div>
+                                            <div id="3rd" ng-hide="hides4" ></div>
+                                        </div>
+                                        <div id="menu4" class="tab-pane fade">
+                                            <div ng-show="hides5"><br><div class='progress'><div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width:50%'></div></div></div>
+                                            <div id="4th" ng-hide="hides5" ></div>
+                                        </div>
+                                        <div id="menu5" class="tab-pane fade">
+                                            <div ng-show="hides6"><br><div class='progress'><div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width:50%'></div></div></div>
+                                            <div id="5th" ng-hide="hides6" ></div>
+                                        </div>
+                                        <div id="menu6" class="tab-pane fade">
+                                            <div ng-show="hides7"><br><div class='progress'><div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width:50%'></div></div></div>
+                                            <div id="6th" ng-hide="hides7" ></div>
+                                        </div>
+                                        <div id="menu7" class="tab-pane fade">
+                                            <div ng-show="hides8"><br><div class='progress'><div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width:50%'></div></div></div>
+                                            <div id="7th" ng-hide="hides8" ></div>
+                                        </div>
+                                        <div id="menu8" class="tab-pane fade">
+                                            <div ng-show="hides9"><br><div class='progress'><div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width:50%'></div></div></div>
+                                            <div id="8th" ng-hide="hides9" ></div>
+                                        </div>
+                                        <div id="menu9" class="tab-pane fade">
+                                            <div ng-show="hides10"><br><div class='progress'><div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width:50%'></div></div></div>
+                                            <div id="9th" ng-hide="hides10" ></div>
+                                        </div>
+                                    </div>
+                                            </div>
+                                        </div>
+                                        <div id="number2" class="tab-pane fade col-sm-12">
+                                            <div ng-show="hides11"><br><div class='progress'><div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width:50%'></div></div></div>
+                                            <div id="historicalChart" ng-hide="hides11"></div>
+                                        </div>
+                                        <div id="number3" class="tab-pane fade">
+                                            <div ng-show="hides12"><br><div class='progress'><div class='progress-bar progress-bar-striped active' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width:50%'></div></div></div>
+                                            <div ng-hide="hides12" ng-bind-html="newsContent"></div>
+                                        </div>
+                                   </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </body>
+        </html>
