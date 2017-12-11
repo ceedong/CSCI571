@@ -1,0 +1,121 @@
+
+            #block1{
+                position:relative;
+                top:10px;
+            }
+            #block2{
+                position:relative;
+                top:10px;
+            }
+            body{
+                background-image:url(http://cs-server.usc.edu:45678/hw/hw8/images/background.png);
+                background-repeat:repeat;
+            }
+            #1 hr{
+                width:98%;
+            }
+       
+.yellow{
+    color:rgb(253,212,69);
+}
+.animate-slide {
+  position:relative;
+  width: 100%;
+  height:50%;
+  top: 0;
+  -webkit-transform: translate3d(0,0,0); /* Chrome, Safari, Opera */
+  transform: translate3d(0,0,0,);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
+}
+.animate-slide1 {
+  position:relative;
+  width: 100%;
+  height:50%;
+  top: 0;
+  -webkit-transform: translate3d(0,0,0); /* Chrome, Safari, Opera */
+  transform: translate3d(0,0,0,);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  perspective: 1000;
+}
+
+.animate-slide.ng-hide-add,
+.animate-slide.ng-hide-remove {
+  display:!important;
+}
+
+.animate-slide.ng-hide-remove.ng-hide-remove-active {
+  -webkit-animation:0.5s slide-right;
+  animation:0.5s slide-right;
+}
+
+.animate-slide1.ng-hide-remove.ng-hide-remove-active {
+  -webkit-animation:0.5s slide-left;
+  animation:0.5s slide-left;
+}
+.animate-slide.ng-hide-add.ng-hide-add-active {
+
+}
+
+.animate-slide.ng-hide {
+      right:100%;
+    display:!important;
+}
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes slide-right
+{
+  0%   {right:100%;}
+  100%  {right:0%;}
+}
+
+/* Standard syntax */
+@keyframes slide-right
+{
+  0%   {right:100%;}
+  100%  {right:0%;}
+}
+
+@-webkit-keyframes slide-left
+{
+  0%   {left:100%;}
+  100%  {left:0%;}
+}
+
+/* Standard syntax */
+@keyframes slide-left
+{
+  0%   {left:100%;}
+  100%  {left:0%;}
+}
+/* Chrome, Safari, Opera */
+@-webkit-keyframes slide-down
+{
+  0%  {right:0%;}
+  100%   {right:100%;}
+}
+
+/* Standard syntax */
+@keyframes slide-down
+{
+  0%  {right:0%;}
+  100%   {right:100%;}
+}
+    
+.containers {
+  width:100%;
+  height:100%;
+  position:relative;
+  overflow:hidden;
+  margin: auto;
+}
+#firstElement{
+
+}
+#secondElement{
+
+}
