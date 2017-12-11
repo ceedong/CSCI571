@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>This is for the HW9 CE DONG </title>
+        <meta charset="UTF-8">
+        <meta  name="viewport" content="width=device-width, initial0scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="http://code.highcharts.com/stock/highstock.js"></script>
+        <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
+    </head>
+    <body>
+                  <div class="container">
+            <div id="1st"></div>
+        </div>
+        <script>
+               var returnStates = "1";
+                  var viewTheBBANDS = "";
+             var imageURL = "1";
+            function getthestates(){
+                return returnStates
+            }
+              function getFBURL(){
+                return imageURL
+            }
+            
+            
+                                
+      var exportUrl = "http://export.highcharts.com/";             
+        
+                     function testPOST(toBeLoad){
+                         console.log(toBeLoad)
+                         var optionStr = JSON.stringify(toBeLoad);
+                         var dataString = encodeURI('async=true&type=jpeg&width=400&options=' + optionStr);
+                         console.log(dataString);
+                         $.ajax({
+                             method:'POST',
+                             url:exportUrl,
+                             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                             data:dataString
+                         }).then(function(response){
+                             console.log('get the file from the website');
+                             console.log(response);
+                             facebookGobal = exportUrl + response;
+                            imageURL = facebookGobal;
+                             console.log(imageURL);
+                         })
+                     }
+                     
+            
+            
+            
+            
+            function getTheData(x){
+                      imageURL = "1";
+                 returnStates = "1";
+               $.ajax({url: "http://default-environment.btnk2kbng4.us-east-2.elasticbeanstalk.com/BBANDS/"+x, dataType: 'json', success: function(result){
+                  var autodata = result;
+                        var lists = Object.keys(autodata["Technical Analysis: BBANDS"]);
+                             console.log(lists);
+                             var BBANDSSymbol = autodata["Meta Data"]["1: Symbol"];
+                             var BBANDSDate=[];
+                             var BBANDSDataLower=[];
+                             var BBANDSDataMiddle=[];
+                             var BBANDSDataUpper=[];
+                             for(var i=0; i<140; i++){
+                                 BBANDSDate[139-i] = lists[i].slice(5,10);
+                                 BBANDSDataLower[139-i] = Number(autodata["Technical Analysis: BBANDS"][lists[i]]["Real Lower Band"]);
+                                 BBANDSDataMiddle[139-i] = Number(autodata["Technical Analysis: BBANDS"][lists[i]]["Real Middle Band"]);
+                                 BBANDSDataUpper[139-i] = Number(autodata["Technical Analysis: BBANDS"][lists[i]]["Real Upper Band"]);
+                             }
+                             //console.log(SMAData);
+                             //console.log(SMADate);
+                             viewBBANDS(BBANDSDate,BBANDSDataLower,BBANDSDataMiddle,BBANDSDataUpper,BBANDSSymbol);
+                         }})
+                
+                 return returnStates
+            }
+                function viewBBANDS(x,y,z,w,v){
+                
+            viewTheBBANDS =     {
+                        chart: {
+            zoomType: 'x'
+
+        },
+    title: {
+        text: 'Bollinger Bands (BBANDS)'
+    },
+    subtitle: {
+        text:  '<a href="https://www.alphavantage.co/" target="_blank" style="color:rgb(57,122,175)" >Source: Alpha Vantage</a>'
+    },
+    xAxis: {
+        categories:x,
+        crosshair: true,
+        tickInterval:5
+    },
+    yAxis: {
+      //      min: 135,
+      //      max: 170,
+       //     tickInterval:5,
+            title: {
+           text: 'BBANDS'  
+        }   
+    },
+    series: [{
+        name: v.toUpperCase() + " Real Middle Band",
+        data: z,
+        color: '#ef9291'
+                    },{
+        name: v.toUpperCase() + " Real Lower Band",
+        data: y,
+        color: '#000000'               
+                    },{
+        name: v.toUpperCase() + " Real Upper Band",
+        data: w,
+        color: '#C3E4C6'                
+                    }],
+                 }
+     Highcharts.chart('1st',viewTheBBANDS)
+                    returnStates = "0"
+                    testPOST(viewTheBBANDS)
+    }
+        </script>
+    </body>
+</html>
