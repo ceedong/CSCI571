@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>This is for the HW9 CE DONG </title>
+        <meta charset="UTF-8">
+        <meta  name="viewport" content="width=device-width, initial0scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="http://code.highcharts.com/stock/highstock.js"></script>
+        <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div id="1st"></div>
+        </div>
+        <script>
+    var returnStates = "1";
+            function getthestates(){
+                return returnStates
+            }
+            function getTheData(x){
+                returnStates = "1";
+               $.ajax({url: "http://default-environment.btnk2kbng4.us-east-2.elasticbeanstalk.com/stockinfo/"+x, dataType: 'json', success: function(result){
+                  var autodata = result;
+                    var lists = Object.keys(autodata["Time Series (Daily)"]);
+      var priceDate=[];
+      var priceVolume=[];
+      var pricePrice=[];
+      var priceSymbol = autodata["Meta Data"]["2. Symbol"];
+      
+      for(var i=0; i <140; i++){
+       priceDate[139-i] = lists[i].slice(5,10);
+       priceVolume[139-i] = Number(autodata["Time Series (Daily)"][lists[i]]["5. volume"]); 
+       pricePrice[139-i] = Number(autodata["Time Series (Daily)"][lists[i]]["4. close"]);    
+        }      
+             var priceDatas = [];
+                            if(lists.length >=1000){
+                            for(var j=0; j<1000; j++){
+                                var element1 = Date.parse(lists[j]);
+                                var element2 = Number(autodata["Time Series (Daily)"][lists[j]]["4. close"]);
+                               // priceDatas[999-j] = [Date.parse(lists[j]),Number(autodata["Time Series (Daily)"][lists[j]]["4. close"])];
+                                priceDatas[999-j] = [element1, element2];
+                            }} else{
+                                var num = lists.length;
+                              for(var j=0; j<num; j++){
+                                var element1 = Date.parse(lists[j]);
+                                var element2 = Number(autodata["Time Series (Daily)"][lists[j]]["4. close"]);
+                               // priceDatas[999-j] = [Date.parse(lists[j]),Number(autodata["Time Series (Daily)"][lists[j]]["4. close"])];
+                                priceDatas[num-j] = [element1, element2];
+                            }  
+                                
+                                
+                            }
+      
+      
+     // $scope.myData = priceDatas;
+      
+       var maxVolume=Math.max.apply(null, priceVolume);
+                            var maxPrice=Math.max.apply(null, pricePrice);
+                           // console.log(maxPrice);
+                           // console.log(maxVolume);
+                            //console.log(priceDates);
+                            //console.log(pricePrices);
+                            //console.log(priceDate);
+                            //console.log(priceVolume);
+                           //console.log(pricePrice);
+                            viewHistoricalCharts(priceDatas,priceSymbol);
+        console.log(priceDate, priceVolume, pricePrice, priceSymbol,maxPrice,maxVolume)
+            
+        }});
+           return returnStates
+            }
+          function viewHistoricalCharts(x,y){
+        var viewTheHistory = {
+          chart: {
+            
+            zoomType: 'x'
+
+        },
+                
+           rangeSelector: {
+
+            buttons: [ {
+                type: 'month',
+                count: 1,
+                text: '1m'
+            },{
+                type: 'month',
+                count: 3,
+                text: '3m'
+            }, {
+                type: 'month',
+                count: 6,
+                text: '6m'
+            }, {
+                type: 'year',
+                count: 1,
+                text: '1y'
+            }, {
+                type: 'all',
+                text: 'All'
+            }],
+            selected: 0
+        },
+        
+                
+    title: {
+        text: y.toUpperCase()+' Stock Value'
+    },
+    subtitle: {
+        text:  '<a href="https://www.alphavantage.co/" target="_blank" style="color:rgb(57,122,175)" >Source: Alpha Vantage</a>'
+    },
+      yAxis: {
+            title: {
+           text: 'Stock Value'  
+        }   
+    },
+         
+    series: [{
+        name: y.toUpperCase(),
+        data: x,
+        type: 'area',
+        color: 'rgb(159,201,239)'
+                    }],
+       navigation: {
+        buttonOptions: {
+          align: 'right' 
+        }
+    }
+        
+      
+                 }
+  Highcharts.stockChart('1st', viewTheHistory ); 
+     returnStates = "0";
+    }
+       
+            
+            
+        </script>
+    </body>
+
+</html>
