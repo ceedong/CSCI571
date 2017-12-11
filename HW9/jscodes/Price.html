@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>This is for the HW9 CE DONG </title>
+        <meta charset="UTF-8">
+        <meta  name="viewport" content="width=device-width, initial0scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="http://code.highcharts.com/stock/highstock.js"></script>
+        <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div id="1st"></div>
+        </div>
+        <script>
+          var viewThePrice = "";
+          var returnStates = "1";  
+          var imageURL = "1";
+            function getthestates(){
+                return returnStates
+            }
+            
+            function getFBURL(){
+                return imageURL
+            }
+    //the part is for facebook and export the image file
+               
+                    
+      var exportUrl = "http://export.highcharts.com/";             
+        
+                     function testPOST(toBeLoad){
+                         console.log(toBeLoad)
+                         var optionStr = JSON.stringify(toBeLoad);
+                         var dataString = encodeURI('async=true&type=jpeg&width=400&options=' + optionStr);
+                         console.log(dataString);
+                         $.ajax({
+                             method:'POST',
+                             url:exportUrl,
+                             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                             data:dataString
+                         }).then(function(response){
+                             console.log('get the file from the website');
+                             console.log(response);
+                             facebookGobal = exportUrl + response;
+                            imageURL = facebookGobal;
+                             console.log(imageURL);
+                         })
+                     }
+                     
+                     
+                   
+                     
+                 
+            
+            
+            function getTheData(x){
+                returnStates = "1";
+                imageURL = "1";
+               $.ajax({url: "http://default-environment.btnk2kbng4.us-east-2.elasticbeanstalk.com/stockinfo/"+x, dataType: 'json', success: function(result){
+                  var autodata = result;
+                    var lists = Object.keys(autodata["Time Series (Daily)"]);
+      var priceDate=[];
+      var priceVolume=[];
+      var pricePrice=[];
+      var priceSymbol = autodata["Meta Data"]["2. Symbol"];
+      for(var i=0; i <140; i++){
+       priceDate[139-i] = lists[i].slice(5,10);
+       priceVolume[139-i] = Number(autodata["Time Series (Daily)"][lists[i]]["5. volume"]); 
+       pricePrice[139-i] = Number(autodata["Time Series (Daily)"][lists[i]]["4. close"]);    
+        }      
+             var priceDatas = [];
+                            if(lists.length >=1000){
+                            for(var j=0; j<1000; j++){
+                                var element1 = Date.parse(lists[j]);
+                                var element2 = Number(autodata["Time Series (Daily)"][lists[j]]["4. close"]);
+                               // priceDatas[999-j] = [Date.parse(lists[j]),Number(autodata["Time Series (Daily)"][lists[j]]["4. close"])];
+                                priceDatas[999-j] = [element1, element2];
+                            }} else{
+                                var num = lists.length;
+                              for(var j=0; j<num; j++){
+                                var element1 = Date.parse(lists[j]);
+                                var element2 = Number(autodata["Time Series (Daily)"][lists[j]]["4. close"]);
+                               // priceDatas[999-j] = [Date.parse(lists[j]),Number(autodata["Time Series (Daily)"][lists[j]]["4. close"])];
+                                priceDatas[num-j] = [element1, element2];
+                            }  
+                                
+                                
+                            }
+      
+      
+     // $scope.myData = priceDatas;
+      
+       var maxVolume=Math.max.apply(null, priceVolume);
+                            var maxPrice=Math.max.apply(null, pricePrice);
+                           // console.log(maxPrice);
+                           // console.log(maxVolume);
+                            //console.log(priceDates);
+                            //console.log(pricePrices);
+                            //console.log(priceDate);
+                            //console.log(priceVolume);
+                           //console.log(pricePrice);
+                            viewPrice(priceDate, priceVolume, pricePrice, priceSymbol,maxPrice,maxVolume);
+        console.log(priceDate, priceVolume, pricePrice, priceSymbol,maxPrice,maxVolume);
+        
+        }});
+          return returnStates
+            }
+            
+           function viewPrice(x,y,z,w,u,v){
+         viewThePrice ={  
+                                lang: {
+            numericSymbols: ['k', ' M']
+        },
+        chart: {
+            zoomType: 'x'
+
+        },
+        title: {
+            text: w.toUpperCase()+' Stock Price and Volume'
+        },
+         subtitle: {
+            text: '<a href="https://www.alphavantage.co/" target="_blank" style="color:rgb(57,122,175)" >Source: Alpha Vantage</a>'
+        },
+        xAxis: {
+            categories:x,
+            crosshair: true,
+            tickInterval:5
+        },
+           yAxis: [{ // Primary yAxis
+              
+             max:u,
+           
+
+           title: {
+               text: 'Stock Price',
+          }
+       },
+        { // Secondary yAxis
+           title: {
+               text: 'Volume',   
+            },
+            
+              max:v,
+          
+              opposite: true
+       }],
+
+        series: [{
+         yAxis:0,
+             name: 'Price',
+              type: 'area',
+              lineColor: 'rgb(11,36,251)',
+              color: 'rgb(230,230,254)',
+              data:z},
+            { yAxis:1,
+             name: ' Volume',
+              type: 'column',
+              color: 'rgb(252,13,27)',
+             data:y
+        }]
+           }
+        
+        
+                 new Highcharts.Chart('1st',viewThePrice);
+                   returnStates = "0";
+                testPOST(viewThePrice);
+    }
+       
+            
+           
+        </script>
+    </body>
+
+</html>
