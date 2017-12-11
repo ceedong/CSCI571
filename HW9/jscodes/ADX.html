@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>This is for the HW9 CE DONG </title>
+        <meta charset="UTF-8">
+        <meta  name="viewport" content="width=device-width, initial0scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="http://code.highcharts.com/stock/highstock.js"></script>
+        <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
+    </head>
+    <body>
+                  <div class="container">
+            <div id="1st"></div>
+        </div>
+        <script>
+            var viewTheADX = "";
+              var returnStates = "1"; 
+            var imageURL = "1";
+            function getthestates(){
+                return returnStates
+            }
+              function getFBURL(){
+                return imageURL
+            }
+            
+            
+                  var exportUrl = "http://export.highcharts.com/";             
+        
+                     function testPOST(toBeLoad){
+                         console.log(toBeLoad)
+                         var optionStr = JSON.stringify(toBeLoad);
+                         var dataString = encodeURI('async=true&type=jpeg&width=400&options=' + optionStr);
+                         console.log(dataString);
+                         $.ajax({
+                             method:'POST',
+                             url:exportUrl,
+                             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                             data:dataString
+                         }).then(function(response){
+                             console.log('get the file from the website');
+                             console.log(response);
+                             facebookGobal = exportUrl + response;
+                            imageURL = facebookGobal;
+                             console.log(imageURL);
+                         })
+                     }
+            
+            
+            function getTheData(x){
+                returnStates = "1";
+                     imageURL = "1";
+
+               $.ajax({url: "http://default-environment.btnk2kbng4.us-east-2.elasticbeanstalk.com/ADX/"+x, dataType: 'json', success: function(result){
+                  var autodata = result;
+                             var lists = Object.keys(autodata["Technical Analysis: ADX"]);
+                             console.log(lists);
+                             var SMASymbol = autodata["Meta Data"]["1: Symbol"];
+                             var SMADate=[];
+                             var SMAData=[];
+                             for(var i=0; i<140; i++){
+                                 SMADate[139-i] = lists[i].slice(5,10);
+                                 SMAData[139-i] = Number(autodata["Technical Analysis: ADX"][lists[i]]["ADX"])
+                             }
+                             //console.log(SMAData);
+                             //console.log(SMADate);
+                             viewADX(SMADate,SMAData,SMASymbol);
+        
+        }});
+           return returnStates
+            }
+            
+             function viewADX(x,y,z){
+     viewTheADX =   {
+          chart: {
+            zoomType: 'x'
+
+        },
+    title: {
+        text: 'Average Directional Movement Index (ADX)'
+    },
+    subtitle: {
+        text:  '<a href="https://www.alphavantage.co/" target="_blank" style="color:rgb(57,122,175)" >Source: Alpha Vantage</a>'
+    },
+    xAxis: {
+        categories:x,
+        crosshair: true,
+        tickInterval:5
+    },
+    yAxis: {
+            title: {
+           text: 'ADX'  
+        }   
+    },
+    series: [{
+        name: z.toUpperCase(),
+        data: y,
+        color: '#ef9291'
+                    }],
+                 }    
+    Highcharts.chart('1st', viewTheADX);  
+                 returnStates = "0";
+                 testPOST(viewTheADX);
+
+            }
+            
+            
+        </script>
+    </body>
+</html>
