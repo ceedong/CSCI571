@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>This is for the HW9 CE DONG </title>
+        <meta charset="UTF-8">
+        <meta  name="viewport" content="width=device-width, initial0scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="http://code.highcharts.com/stock/highstock.js"></script>
+        <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
+    </head>
+    <body>
+                  <div class="container">
+            <div id="1st"></div>
+        </div>
+        <script>
+         var returnStates = "1"; 
+            var viewTheMACD = "";
+          var imageURL = "1";
+            function getthestates(){
+                return returnStates
+            }
+            function getFBURL(){
+                return imageURL
+            }
+
+            
+                                
+      var exportUrl = "http://export.highcharts.com/";             
+        
+                     function testPOST(toBeLoad){
+                         console.log(toBeLoad)
+                         var optionStr = JSON.stringify(toBeLoad);
+                         var dataString = encodeURI('async=true&type=jpeg&width=400&options=' + optionStr);
+                         console.log(dataString);
+                         $.ajax({
+                             method:'POST',
+                             url:exportUrl,
+                             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                             data:dataString
+                         }).then(function(response){
+                             console.log('get the file from the website');
+                             console.log(response);
+                             facebookGobal = exportUrl + response;
+                            imageURL = facebookGobal;
+                             console.log(imageURL);
+                         })
+                     }
+            
+            
+            function getTheData(x){
+                     imageURL = "1";
+                returnStates = "1";
+               $.ajax({url: "http://default-environment.btnk2kbng4.us-east-2.elasticbeanstalk.com/MACD/"+x, dataType: 'json', success: function(result){
+                  var autodata = result;
+                      var lists = Object.keys(autodata["Technical Analysis: MACD"]);
+                             console.log(lists);
+                             var MACDSymbol = autodata["Meta Data"]["1: Symbol"];
+                             var MACDDate=[];
+                             var MACDData=[];
+                             var MACDDataSignal=[];
+                             var MACDDataHist=[];
+                             for(var i=0; i<140; i++){
+                                 MACDDate[139-i] = lists[i].slice(5,10);
+                                 MACDData[139-i] = Number(autodata["Technical Analysis: MACD"][lists[i]]["MACD"]);
+                                 MACDDataSignal[139-i] = Number(autodata["Technical Analysis: MACD"][lists[i]]["MACD_Signal"]);
+                                 MACDDataHist[139-i] = Number(autodata["Technical Analysis: MACD"][lists[i]]["MACD_Hist"]);
+                             }
+                             //console.log(SMAData);
+                             //console.log(SMADate);
+                             viewMACD(MACDDate,MACDData,MACDDataSignal,MACDDataHist,MACDSymbol);}
+                       
+                        });
+           return returnStates
+            }
+                       
+                           function viewMACD(x,y,z,w,v){
+        
+                viewTheMACD = {
+                     chart: {
+            zoomType: 'x'
+
+        },
+    title: {
+        text: 'Moving Average Convergence/Divergence (MACD)'
+    },
+    subtitle: {
+        text:  '<a href="https://www.alphavantage.co/" target="_blank" style="color:rgb(57,122,175)" >Source: Alpha Vantage</a>'
+    },
+    xAxis: {
+        categories:x,
+        crosshair: true,
+        tickInterval:5
+    },
+    yAxis: {
+      //      min: -2,
+      //      max: 4,
+       //     tickInterval:1,
+            title: {
+           text: 'MACD'  
+        }   
+    },
+    series: [{
+        name: v.toUpperCase() + " MACD_Hist",
+        data: w,
+        color: '#ef9291'
+                    },{
+        name: v.toUpperCase() + " MACD",
+        data: y,
+        color: '#000000'               
+                    },{
+        name: v.toUpperCase() + " MACD_Signal",
+        data: z,
+        color: '#C3E4C6'                
+                    }]
+                     
+                      
+                 } 
+    Highcharts.chart('1st', viewTheMACD);
+        returnStates = "0";
+         testPOST(viewTheMACD);
+
+    }
+        </script>
+    </body>
+</html>
