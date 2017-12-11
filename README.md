@@ -66,3 +66,24 @@ Other features include:<br>
 
 
 ## Homework-9
+### High-level Description
+This assignment is a mobile version of HW8. The functionalities are totally the same. But this time, client-side scripts should all be implemented using Swift, UI design should be implemented using storyboard in Xcode.
+
+
+### Pics for detail
+#### Initial page
+
+![alt text](/hw9_initial.png)
+#### Auto-complete
+
+![alt text](/hw9_autocomplete.png)
+#### Current-stock details
+
+![alt text](/hw9_stockinfo.png)
+![alt_text](/hw9_highchart.png)
+#### Historical & News chart details
+
+![alt text](/hw9_historical:news.png)
+#### Facebook share feature
+
+![alt text](/hw9_fb.png)
