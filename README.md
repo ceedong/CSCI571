@@ -14,8 +14,6 @@ HW1/2/5/7 are related sowftware installations and configurations for Apache/PHP/
 
 ## Homework-3
 The assignment aims to imitate a web page as closely as possible, writing HTML and CSS directly.
-The web page in Chrome browser:
-![alt text](http://cs-server.usc.edu:45678/hw/hw3/ScreenShotChrome.png)
 
 ## Homework-4
 The assignment aims to write a HTML/JavaScript program, which takes the URL of a JSON document containing US Airlines information, parses the JSON file, and extracts the list of airlines, displaying them in a table. The JavaScript program will be embedded in an HTML file so that it can be executed within a browser. 
